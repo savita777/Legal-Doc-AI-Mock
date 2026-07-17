@@ -11,9 +11,10 @@ export default async function handler(req, res) {
   if (!SUPA_URL || !SUPA_KEY) return res.status(500).json({ error: "System Error: Missing Database Keys" });
 
   try {
-    const prompt = `Act as an expert lawyer. Summarize: ${text}`;
+    const prompt = `Act as an expert lawyer. Summarize the following complex legal document into 3-4 simple bullet points. Document: ${text}`;
     
-    const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`, {
+    // Model updated to gemini-3.5-flash as instructed
+    const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${GEMINI_KEY}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
@@ -29,7 +30,7 @@ export default async function handler(req, res) {
     const aiSummary = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text;
     if (!aiSummary) throw new Error("AI returned empty content");
 
-    // Supabase Save
+    // Supabase Save to 'document' table
     const dbRes = await fetch(`${SUPA_URL}/rest/v1/document`, {
       method: 'POST',
       headers: {
@@ -50,7 +51,7 @@ export default async function handler(req, res) {
     res.status(200).json({ summary: aiSummary });
 
   } catch (error) {
-    console.error("DEBUG_ERROR:", error); // Yeh Vercel log mein niche scroll karke dikhega
+    console.error("DEBUG_ERROR:", error); 
     res.status(500).json({ error: error.message });
   }
 }
