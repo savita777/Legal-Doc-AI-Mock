@@ -124,6 +124,14 @@
       </div>
     </section>
 
+    <!-- Save Notification Banner -->
+    <div id="signupBanner" class="hidden max-w-6xl mx-auto px-5 sm:px-6 mt-6">
+      <div class="bg-seal/10 border border-seal rounded-xl p-4 flex items-center justify-between">
+        <p class="text-sm text-seal font-medium">Want to save this summary for later?</p>
+        <button onclick="alert('Signup logic coming soon in the next update!')" class="bg-seal text-surface text-sm px-4 py-2 rounded-full font-semibold hover:bg-seal-dark transition">Sign up to Save</button>
+      </div>
+    </div>
+
     <section class="reveal reveal-4 mt-16">
       <div class="flex items-end justify-between border-b border-rule pb-3 mb-4">
         <div><h3 class="font-display text-lg font-semibold">Recent Summaries</h3><p class="font-mono text-[11px] uppercase tracking-widest text-ink-600 mt-1">Saved to this session</p></div>
@@ -139,17 +147,25 @@
   <script>
   (function () {
     'use strict';
-    const legalInput = document.getElementById('legalInput'), charCount = document.getElementById('charCount'), clearBtn = document.getElementById('clearBtn'), simplifyBtn = document.getElementById('simplifyBtn'), btnLabel = document.getElementById('btnLabel'), btnIcon = document.getElementById('btnIcon'), emptyState = document.getElementById('emptyState'), loadingState = document.getElementById('loadingState'), summaryText = document.getElementById('summaryText'), stampBadge = document.getElementById('stampBadge'), copyBtn = document.getElementById('copyBtn'), copyLabel = document.getElementById('copyLabel'), recentList = document.getElementById('recentList'), recentEmpty = document.getElementById('recentEmpty');
+    const legalInput = document.getElementById('legalInput'), charCount = document.getElementById('charCount'), clearBtn = document.getElementById('clearBtn'), simplifyBtn = document.getElementById('simplifyBtn'), btnLabel = document.getElementById('btnLabel'), btnIcon = document.getElementById('btnIcon'), emptyState = document.getElementById('emptyState'), loadingState = document.getElementById('loadingState'), summaryText = document.getElementById('summaryText'), stampBadge = document.getElementById('stampBadge'), copyBtn = document.getElementById('copyBtn'), copyLabel = document.getElementById('copyLabel'), recentList = document.getElementById('recentList'), recentEmpty = document.getElementById('recentEmpty'), signupBanner = document.getElementById('signupBanner');
     const recentSummaries = [];
 
     function updateCharCount() { const text = legalInput.value; simplifyBtn.disabled = text.trim().length === 0; charCount.textContent = `${text.length} characters`; }
     legalInput.addEventListener('input', updateCharCount);
     clearBtn.addEventListener('click', () => { legalInput.value = ''; updateCharCount(); legalInput.focus(); });
-    function showState(state) { emptyState.classList.toggle('hidden', state !== 'empty'); loadingState.classList.toggle('hidden', state !== 'loading'); summaryText.classList.toggle('hidden', state !== 'result'); copyBtn.classList.toggle('hidden', state !== 'result'); copyBtn.classList.toggle('flex', state === 'result'); }
+    
+    function showState(state) { 
+      emptyState.classList.toggle('hidden', state !== 'empty'); 
+      loadingState.classList.toggle('hidden', state !== 'loading'); 
+      summaryText.classList.toggle('hidden', state !== 'result'); 
+      copyBtn.classList.toggle('hidden', state !== 'result'); 
+      copyBtn.classList.toggle('flex', state === 'result'); 
+      signupBanner.classList.toggle('hidden', state !== 'result'); 
+    }
+    
     function fireStamp(animate) { stampBadge.classList.remove('hidden', 'stamp-in'); if (animate) { void stampBadge.offsetWidth; stampBadge.classList.add('stamp-in'); } }
     function escapeHTML(str) { const div = document.createElement("div"); div.textContent = str; return div.innerHTML; }
     
-    // NEW: Function to remove stars ** and convert them to clean bold text
     function processMarkdown(text) {
         return escapeHTML(text).replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-ink-900">$1</strong>');
     }
@@ -160,7 +176,6 @@
       for (const line of lines) {
         if (/^[\*\-]\s+/.test(line)) { 
           if (!inList) { html += '<ul class="list-disc list-inside space-y-2 mb-4">'; inList = true; } 
-          // Applies the new clean bold text filter here
           html += `<li class="text-ink-900">${processMarkdown(line.replace(/^[\*\-]\s+/, ""))}</li>`; 
         }
         else { 
@@ -199,5 +214,5 @@
   })();
   </script>
 </body>
-</html>
-
+  </html>
+  
