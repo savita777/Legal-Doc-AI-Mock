@@ -10,15 +10,27 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "System Error: Missing Database Keys" });
   }
 
-  // 1. Backend Strict Validation (Koi fake request na bhej paye)
+  // 1. Basic Format & Length Validation
   if (!email || !email.includes('@') || !email.includes('.') || password.length < 6) {
     return res.status(400).json({ error: "Invalid email format or password too short." });
+  }
+
+  // 2. NEW: Block Dummy/Fake Emails (Smart Blocker)
+  const emailLower = email.toLowerCase();
+  const fakeKeywords = ['test', 'dummy', 'fake', 'abc', 'admin'];
+  const fakeDomains = ['test.com', 'example.com', 'dummy.com'];
+  const domain = emailLower.split('@')[1];
+
+  if (action === 'signup') {
+    if (fakeKeywords.some(kw => emailLower.includes(kw)) || fakeDomains.includes(domain)) {
+      return res.status(400).json({ error: "Please use a real personal or work email address. Dummy emails are blocked." });
+    }
   }
 
   try {
     let endpoint = '';
     
-    // 2. Route based on Login or Signup
+    // 3. Route based on Login or Signup
     if (action === 'signup') {
       endpoint = `${SUPA_URL}/auth/v1/signup`;
     } else if (action === 'login') {
@@ -28,7 +40,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Invalid action." });
     }
 
-    // 3. Asking Supabase to verify
+    // 4. Asking Supabase to verify
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
@@ -40,7 +52,7 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-    // 4. Agar Supabase ne entry DENY kar di
+    // 5. Agar Supabase ne entry DENY kar di
     if (!response.ok) {
       const errorMsg = data.error_description || data.msg || data.message || "Authentication Failed";
       
@@ -54,7 +66,7 @@ export default async function handler(req, res) {
       throw new Error(errorMsg); // Catch all other errors
     }
 
-    // 5. SUCCESS - Entry Granted
+    // 6. SUCCESS - Entry Granted
     res.status(200).json({ success: true, user: data.user });
 
   } catch (error) {
