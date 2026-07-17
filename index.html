@@ -124,11 +124,23 @@
       </div>
     </section>
 
-    <!-- Save Notification Banner -->
+    <!-- UPDATED: Secure Auth Banner (No Keys inside HTML!) -->
     <div id="signupBanner" class="hidden max-w-6xl mx-auto px-5 sm:px-6 mt-6">
-      <div class="bg-seal/10 border border-seal rounded-xl p-4 flex items-center justify-between">
-        <p class="text-sm text-seal font-medium">Want to save this summary for later?</p>
-        <button onclick="alert('Signup logic coming soon in the next update!')" class="bg-seal text-surface text-sm px-4 py-2 rounded-full font-semibold hover:bg-seal-dark transition">Sign up to Save</button>
+      <div class="bg-surface border border-seal rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div>
+          <h3 class="font-display font-semibold text-lg text-ink-900">Want to save this for later?</h3>
+          <p class="font-sans text-sm text-ink-600 mt-1">Create an account to keep your legal summaries safe.</p>
+        </div>
+        
+        <div id="authControls" class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+          <input type="email" id="authEmail" placeholder="Email address" class="w-full sm:w-auto px-3 py-2 border border-rule rounded-md font-sans text-sm outline-none focus:border-seal bg-paper">
+          <input type="password" id="authPassword" placeholder="Password" class="w-full sm:w-auto px-3 py-2 border border-rule rounded-md font-sans text-sm outline-none focus:border-seal bg-paper">
+          <div class="flex gap-2 w-full sm:w-auto">
+            <button id="btnSignup" class="flex-1 bg-seal text-surface text-sm px-4 py-2 rounded-md font-semibold hover:bg-seal-dark transition">Sign up</button>
+            <button id="btnLogin" class="flex-1 bg-ink-900 text-surface text-sm px-4 py-2 rounded-md font-semibold hover:bg-ink-600 transition">Log in</button>
+          </div>
+        </div>
+        <p id="authMessage" class="hidden text-sm font-semibold mt-2 md:mt-0"></p>
       </div>
     </div>
 
@@ -147,9 +159,12 @@
   <script>
   (function () {
     'use strict';
+    
+    // Core Application Elements
     const legalInput = document.getElementById('legalInput'), charCount = document.getElementById('charCount'), clearBtn = document.getElementById('clearBtn'), simplifyBtn = document.getElementById('simplifyBtn'), btnLabel = document.getElementById('btnLabel'), btnIcon = document.getElementById('btnIcon'), emptyState = document.getElementById('emptyState'), loadingState = document.getElementById('loadingState'), summaryText = document.getElementById('summaryText'), stampBadge = document.getElementById('stampBadge'), copyBtn = document.getElementById('copyBtn'), copyLabel = document.getElementById('copyLabel'), recentList = document.getElementById('recentList'), recentEmpty = document.getElementById('recentEmpty'), signupBanner = document.getElementById('signupBanner');
     const recentSummaries = [];
 
+    // --- Core Formatting Logic ---
     function updateCharCount() { const text = legalInput.value; simplifyBtn.disabled = text.trim().length === 0; charCount.textContent = `${text.length} characters`; }
     legalInput.addEventListener('input', updateCharCount);
     clearBtn.addEventListener('click', () => { legalInput.value = ''; updateCharCount(); legalInput.focus(); });
@@ -186,6 +201,7 @@
       if (inList) html += "</ul>"; return html;
     }
 
+    // --- API Call for Summarization ---
     simplifyBtn.addEventListener('click', async () => {
       const text = legalInput.value.trim();
       if (!text) return;
@@ -211,6 +227,56 @@
       row.addEventListener('click', () => { legalInput.value = original; summaryText.innerHTML = summaryObj.html; showState('result'); });
       recentList.prepend(row);
     }
+
+    // --- Secure Auth Logic directly contacting /api/auth ---
+    const btnLogin = document.getElementById('btnLogin');
+    const btnSignup = document.getElementById('btnSignup');
+    const authEmail = document.getElementById('authEmail');
+    const authPassword = document.getElementById('authPassword');
+    const authMessage = document.getElementById('authMessage');
+    const authControls = document.getElementById('authControls');
+
+    async function handleAuth(action) {
+      const email = authEmail.value.trim();
+      const password = authPassword.value;
+      
+      if (!email || !password) {
+        showMessage("Please enter email and password.", "text-seal");
+        return;
+      }
+      
+      authControls.style.opacity = '0.5';
+      
+      try {
+        const response = await fetch('/api/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action, email, password })
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) throw new Error(data.error || 'Authentication failed');
+        
+        authControls.classList.add('hidden');
+        showMessage(data.message, "text-green-600");
+      } catch (error) {
+        showMessage(error.message, "text-seal");
+      } finally {
+        authControls.style.opacity = '1';
+      }
+    }
+
+    function showMessage(msg, colorClass) {
+      authMessage.textContent = msg;
+      authMessage.className = `text-sm font-semibold mt-2 md:mt-0 ${colorClass}`;
+      authMessage.classList.remove('hidden');
+    }
+
+    // Event listeners
+    if (btnLogin) btnLogin.addEventListener('click', () => handleAuth('login'));
+    if (btnSignup) btnSignup.addEventListener('click', () => handleAuth('signup'));
+
   })();
   </script>
 </body>
