@@ -4,297 +4,196 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Clarum — Legal, in plain English.</title>
-<meta name="description" content="Paste a contract, lease, or terms of service. Get back what it actually means." />
-
-<!-- Tailwind (CDN) -->
 <script src="https://cdn.tailwindcss.com"></script>
-
-<!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-
 <script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        colors: {
-          ink:   { 900: '#1C1E22', 600: '#565A63' },
-          paper: '#EFEAD9',
-          surface: '#FBF9F2',
-          rule:  '#D8CFB2',
-          seal:  { DEFAULT: '#B3402A', dark: '#8C3220' },
-          highlight: '#F4C430',
-        },
-        fontFamily: {
-          display: ['Fraunces', 'ui-serif', 'Georgia', 'serif'],
-          serif:   ['Fraunces', 'ui-serif', 'Georgia', 'serif'],
-          sans:    ['"Public Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-          mono:    ['"IBM Plex Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
-        },
-      }
-    }
-  }
+  tailwind.config = { theme: { extend: { colors: { ink: { 900: '#1C1E22', 600: '#565A63' }, paper: '#EFEAD9', surface: '#FBF9F2', rule: '#D8CFB2', seal: { DEFAULT: '#B3402A', dark: '#8C3220' }, highlight: '#F4C430' }, fontFamily: { display: ['Fraunces', 'ui-serif', 'Georgia', 'serif'], serif: ['Fraunces', 'ui-serif', 'Georgia', 'serif'], sans: ['"Public Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'], mono: ['"IBM Plex Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'] } } } }
 </script>
-
 <style>
-  @keyframes fadeInUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-  .reveal { animation: fadeInUp .6s ease-out both; }
-  .reveal-1 { animation-delay: .04s; } .reveal-2 { animation-delay: .10s; } .reveal-3 { animation-delay: .16s; } .reveal-4 { animation-delay: .22s; }
-  @keyframes stampIn { 0% { opacity: 0; transform: scale(1.8) rotate(-18deg); } 55% { opacity: 1; transform: scale(0.92) rotate(-6deg); } 100% { opacity: 1; transform: scale(1) rotate(-8deg); } }
-  .stamp-in { animation: stampIn .5s cubic-bezier(.2,1.4,.4,1) forwards; }
-  @keyframes shake { 10%, 90% { transform: translateX(-1px); } 20%, 80% { transform: translateX(2px); } 30%, 50%, 70% { transform: translateX(-4px); } 40%, 60% { transform: translateX(4px); } }
-  .shake { animation: shake .4s; }
-  .doc-scroll::-webkit-scrollbar { width: 8px; } .doc-scroll::-webkit-scrollbar-thumb { background: #D8CFB2; border-radius: 999px; }
-  .prose-lists ul { list-style-type: disc; margin-left: 1.25rem; margin-top: 0.5rem; margin-bottom: 0.5rem; }
-  .prose-lists li { margin-bottom: 0.25rem; }
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } } .reveal { animation: fadeInUp .6s ease-out both; } .reveal-1 { animation-delay: .04s; } .reveal-2 { animation-delay: .10s; } .reveal-3 { animation-delay: .16s; } .reveal-4 { animation-delay: .22s; } @keyframes stampIn { 0% { opacity: 0; transform: scale(1.8) rotate(-18deg); } 55% { opacity: 1; transform: scale(0.92) rotate(-6deg); } 100% { opacity: 1; transform: scale(1) rotate(-8deg); } } .stamp-in { animation: stampIn .5s cubic-bezier(.2,1.4,.4,1) forwards; } .doc-scroll::-webkit-scrollbar { width: 8px; } .doc-scroll::-webkit-scrollbar-thumb { background: #D8CFB2; border-radius: 999px; } .prose-lists ul { list-style-type: disc; margin-left: 1.25rem; margin-top: 0.5rem; margin-bottom: 0.5rem; } .prose-lists li { margin-bottom: 0.25rem; }
 </style>
 </head>
-
 <body class="bg-paper text-ink-900 font-sans antialiased min-h-screen flex flex-col">
-
   <header class="reveal reveal-1 sticky top-0 z-30 bg-paper/90 backdrop-blur border-b border-rule">
     <div class="max-w-6xl mx-auto px-5 sm:px-6 py-4 flex items-center justify-between gap-4">
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-full border-2 border-seal flex items-center justify-center shrink-0" aria-hidden="true">
-          <span class="font-display font-bold text-seal text-sm">C</span>
-        </div>
-        <div class="leading-tight">
-          <div class="flex items-center gap-2">
-            <h1 class="font-display font-semibold text-xl tracking-tight">Clarum</h1>
-            <span class="hidden sm:inline-block font-mono text-[10px] uppercase tracking-widest text-ink-600 border border-rule rounded-full px-2 py-0.5">Beta</span>
-          </div>
-          <p class="hidden sm:block font-mono text-[11px] uppercase tracking-widest text-ink-600 mt-0.5">Legal, in plain English.</p>
-        </div>
-      </div>
-      <a href="#workspace" class="font-sans text-sm font-medium text-ink-600 hover:text-ink-900 transition-colors">Try it ↓</a>
+      <div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full border-2 border-seal flex items-center justify-center shrink-0"><span class="font-display font-bold text-seal text-sm">C</span></div><div><div class="flex items-center gap-2"><h1 class="font-display font-semibold text-xl tracking-tight">Clarum</h1><span class="hidden sm:inline-block font-mono text-[10px] uppercase tracking-widest text-ink-600 border border-rule rounded-full px-2 py-0.5">Beta</span></div></div></div>
     </div>
   </header>
 
   <main class="flex-1 w-full max-w-6xl mx-auto px-5 sm:px-6 py-10 md:py-14">
-    <div class="reveal reveal-2 max-w-2xl mb-10">
-      <h2 class="font-display text-2xl sm:text-3xl font-medium leading-snug">
-        Paste any contract, lease, or terms of service.
-        <span class="text-ink-600">Get back what it actually means.</span>
-      </h2>
-    </div>
+    <div class="reveal reveal-2 max-w-2xl mb-10"><h2 class="font-display text-2xl sm:text-3xl font-medium leading-snug">Paste any contract, lease, or terms of service. <span class="text-ink-600">Get back what it actually means.</span></h2></div>
 
     <section id="workspace" class="reveal reveal-3 flex flex-col lg:flex-row items-stretch gap-6 lg:gap-0">
       <div class="flex-1 bg-surface border border-rule rounded-xl p-5 md:p-6 flex flex-col min-w-0">
-        <div class="flex items-center justify-between mb-3">
-          <span class="font-mono text-[11px] uppercase tracking-widest text-ink-600">Original document</span>
-          <div class="flex items-center gap-3">
-            <span id="charCount" class="font-mono text-[11px] text-ink-600">0 characters</span>
-            <button id="clearBtn" type="button" class="font-sans text-xs text-ink-600 hover:text-ink-900 underline underline-offset-2 transition-colors">Clear</button>
-          </div>
-        </div>
-        <textarea id="legalInput" class="doc-scroll flex-1 min-h-[320px] bg-transparent outline-none resize-none font-serif text-[15px] leading-relaxed placeholder:text-ink-600/50 focus-visible:ring-2 focus-visible:ring-seal/40 rounded-md" placeholder="Paste your lease, NDA, terms of service, or any contract here…"></textarea>
+        <div class="flex items-center justify-between mb-3"><span class="font-mono text-[11px] uppercase tracking-widest text-ink-600">Original document</span><button id="clearBtn" class="font-sans text-xs text-ink-600 underline">Clear</button></div>
+        <textarea id="legalInput" class="doc-scroll flex-1 min-h-[320px] bg-transparent outline-none resize-none font-serif text-[15px] leading-relaxed placeholder:text-ink-600/50" placeholder="Paste your lease, NDA, etc. here…"></textarea>
       </div>
 
       <div class="relative flex items-center justify-center py-5 lg:py-0 lg:px-6">
-        <div class="hidden lg:block absolute inset-y-6 left-1/2 w-px bg-rule -translate-x-1/2" aria-hidden="true"></div>
-        <button id="simplifyBtn" type="button" disabled class="relative z-10 inline-flex items-center gap-2 bg-seal disabled:bg-ink-600/40 disabled:cursor-not-allowed text-surface font-sans font-semibold text-sm px-5 py-3 rounded-full shadow-sm hover:bg-seal-dark transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-seal focus-visible:ring-offset-2 focus-visible:ring-offset-paper whitespace-nowrap">
-          <svg id="btnIcon" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M12 3v3M12 18v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M3 12h3M18 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" />
-            <circle cx="12" cy="12" r="3" />
-          </svg>
-          <span id="btnLabel">Simplify Document</span>
+        <div class="hidden lg:block absolute inset-y-6 left-1/2 w-px bg-rule -translate-x-1/2"></div>
+        <button id="simplifyBtn" disabled class="relative z-10 inline-flex items-center gap-2 bg-seal disabled:bg-ink-600/40 text-surface font-sans font-semibold text-sm px-5 py-3 rounded-full shadow-sm hover:bg-seal-dark transition-colors">
+          <svg id="btnIcon" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M3 12h3M18 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" /><circle cx="12" cy="12" r="3" /></svg>
+          <span id="btnLabel">Simplify</span>
         </button>
       </div>
 
       <div class="flex-1 bg-surface border border-rule rounded-xl p-5 md:p-6 flex flex-col min-w-0 relative">
-        <div id="stampBadge" class="hidden absolute top-4 right-4 sm:right-5 z-20 border-2 border-seal text-seal font-mono font-bold text-[10px] tracking-widest px-2.5 py-1 rounded-md bg-surface/90 select-none" aria-hidden="true">SIMPLIFIED</div>
-        <div class="flex items-center justify-between mb-3">
-          <span class="font-mono text-[11px] uppercase tracking-widest text-ink-600">Plain english</span>
-          <button id="copyBtn" type="button" class="hidden items-center gap-1.5 font-sans text-xs text-ink-600 hover:text-ink-900 transition-colors">
-            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg>
-            <span id="copyLabel">Copy</span>
-          </button>
-        </div>
+        <div id="stampBadge" class="hidden absolute top-4 right-4 z-20 border-2 border-seal text-seal font-mono font-bold text-[10px] tracking-widest px-2.5 py-1 rounded-md bg-surface/90">SIMPLIFIED</div>
+        <div class="flex items-center justify-between mb-3"><span class="font-mono text-[11px] uppercase tracking-widest text-ink-600">Plain english</span></div>
         <div class="doc-scroll flex-1 min-h-[320px] overflow-y-auto">
-          <div id="emptyState" class="h-full min-h-[320px] flex flex-col items-center justify-center text-center gap-2 px-4">
-            <svg class="w-8 h-8 text-ink-600/50 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h11l5 5v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z" /><path d="M15 4v5h5" /><path d="M8 13h8M8 17h5" /></svg>
-            <p class="font-sans text-sm text-ink-600">Your plain-English translation will appear here.</p>
-          </div>
-          <div id="loadingState" class="hidden py-1 space-y-3 animate-pulse">
-            <div class="h-3 bg-rule/60 rounded w-1/3"></div><div class="h-3 bg-rule/60 rounded w-full"></div><div class="h-3 bg-rule/60 rounded w-5/6"></div>
-          </div>
+          <div id="emptyState" class="h-full min-h-[320px] flex flex-col items-center justify-center text-center gap-2"><p class="font-sans text-sm text-ink-600">Your plain-English translation will appear here.</p></div>
+          <div id="loadingState" class="hidden py-1 space-y-3 animate-pulse"><div class="h-3 bg-rule/60 rounded w-1/3"></div><div class="h-3 bg-rule/60 rounded w-full"></div></div>
           <div id="summaryText" class="hidden font-sans text-[15px] leading-relaxed space-y-4 prose-lists"></div>
         </div>
       </div>
     </section>
 
-    <!-- UPDATED: Secure Auth Banner (No Keys inside HTML!) -->
-    <div id="signupBanner" class="hidden max-w-6xl mx-auto px-5 sm:px-6 mt-6">
-      <div class="bg-surface border border-seal rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
-        <div>
-          <h3 class="font-display font-semibold text-lg text-ink-900">Want to save this for later?</h3>
-          <p class="font-sans text-sm text-ink-600 mt-1">Create an account to keep your legal summaries safe.</p>
-        </div>
-        
-        <div id="authControls" class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
-          <input type="email" id="authEmail" placeholder="Email address" class="w-full sm:w-auto px-3 py-2 border border-rule rounded-md font-sans text-sm outline-none focus:border-seal bg-paper">
-          <input type="password" id="authPassword" placeholder="Password" class="w-full sm:w-auto px-3 py-2 border border-rule rounded-md font-sans text-sm outline-none focus:border-seal bg-paper">
-          <div class="flex gap-2 w-full sm:w-auto">
-            <button id="btnSignup" class="flex-1 bg-seal text-surface text-sm px-4 py-2 rounded-md font-semibold hover:bg-seal-dark transition">Sign up</button>
-            <button id="btnLogin" class="flex-1 bg-ink-900 text-surface text-sm px-4 py-2 rounded-md font-semibold hover:bg-ink-600 transition">Log in</button>
+    <!-- REAL DB VAULT BANNER -->
+    <div id="accountBanner" class="hidden max-w-6xl mx-auto px-5 sm:px-6 mt-6">
+      <div class="bg-surface border border-seal rounded-xl p-6">
+        <div id="authSection" class="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="w-full md:w-1/3">
+            <h3 id="authTitle" class="font-display font-semibold text-lg text-ink-900">Create an account</h3>
+            <p id="authSubtitle" class="font-sans text-sm text-ink-600 mt-1">Sign up to safely store and view your legal documents in the cloud.</p>
+          </div>
+          <div class="w-full md:w-2/3 flex flex-col items-start gap-3">
+            <div class="flex flex-col sm:flex-row gap-3 w-full">
+              <input type="email" id="authEmail" placeholder="Valid email address" class="flex-1 px-3 py-2 border border-rule rounded-md font-sans text-sm outline-none focus:border-seal bg-paper">
+              <input type="password" id="authPassword" placeholder="Password (Min 6 chars)" class="flex-1 px-3 py-2 border border-rule rounded-md font-sans text-sm outline-none focus:border-seal bg-paper">
+              <button id="authActionBtn" class="bg-seal text-surface text-sm px-6 py-2 rounded-md font-semibold hover:bg-seal-dark transition">Sign up</button>
+            </div>
+            <div class="flex items-center gap-4 w-full">
+              <button id="authToggleBtn" class="text-sm text-ink-600 underline">Already have an account? Log in</button>
+              <p id="authMessage" class="hidden text-sm font-semibold"></p>
+            </div>
           </div>
         </div>
-        <p id="authMessage" class="hidden text-sm font-semibold mt-2 md:mt-0"></p>
+
+        <div id="vaultSection" class="hidden w-full flex-col gap-4">
+          <div class="flex items-center justify-between border-b border-rule pb-3">
+            <div><h3 class="font-display font-semibold text-lg text-ink-900">My Cloud Vault</h3><p class="font-sans text-sm text-ink-600">Your documents saved in Supabase</p></div>
+            <div class="flex gap-3">
+              <button id="fetchDocsBtn" class="bg-ink-900 text-surface text-sm px-4 py-2 rounded-md font-semibold hover:bg-ink-600 transition">Fetch Docs</button>
+              <button id="logoutBtn" class="border border-rule text-ink-600 text-sm px-4 py-2 rounded-md font-semibold">Log out</button>
+            </div>
+          </div>
+          <div id="vaultList" class="bg-paper border border-rule rounded-lg p-4 min-h-[100px] flex flex-col justify-center items-center">
+            <p class="text-sm text-ink-600 italic">Click fetch to retrieve your documents securely from the database.</p>
+          </div>
+        </div>
       </div>
     </div>
-
-    <section class="reveal reveal-4 mt-16">
-      <div class="flex items-end justify-between border-b border-rule pb-3 mb-4">
-        <div><h3 class="font-display text-lg font-semibold">Recent Summaries</h3><p class="font-mono text-[11px] uppercase tracking-widest text-ink-600 mt-1">Saved to this session</p></div>
-      </div>
-      <div id="recentList" class="border border-rule rounded-xl bg-surface divide-y divide-rule overflow-hidden">
-        <div id="recentEmpty" class="px-6 py-8 text-center"><p class="font-sans text-sm text-ink-600">Nothing here yet — simplify a document above and it'll show up here.</p></div>
-      </div>
-    </section>
   </main>
-
-  <footer class="border-t border-rule mt-8"><div class="max-w-6xl mx-auto px-5 sm:px-6 py-6 text-center"><p class="font-mono text-[11px] text-ink-600 leading-relaxed">Clarum explains documents in plain language. It does not provide legal advice.</p></div></footer>
 
   <script>
   (function () {
     'use strict';
+    const legalInput = document.getElementById('legalInput'), clearBtn = document.getElementById('clearBtn'), simplifyBtn = document.getElementById('simplifyBtn'), btnLabel = document.getElementById('btnLabel'), btnIcon = document.getElementById('btnIcon'), emptyState = document.getElementById('emptyState'), loadingState = document.getElementById('loadingState'), summaryText = document.getElementById('summaryText'), stampBadge = document.getElementById('stampBadge'), accountBanner = document.getElementById('accountBanner');
     
-    // Core Application Elements
-    const legalInput = document.getElementById('legalInput'), charCount = document.getElementById('charCount'), clearBtn = document.getElementById('clearBtn'), simplifyBtn = document.getElementById('simplifyBtn'), btnLabel = document.getElementById('btnLabel'), btnIcon = document.getElementById('btnIcon'), emptyState = document.getElementById('emptyState'), loadingState = document.getElementById('loadingState'), summaryText = document.getElementById('summaryText'), stampBadge = document.getElementById('stampBadge'), copyBtn = document.getElementById('copyBtn'), copyLabel = document.getElementById('copyLabel'), recentList = document.getElementById('recentList'), recentEmpty = document.getElementById('recentEmpty'), signupBanner = document.getElementById('signupBanner');
-    const recentSummaries = [];
+    // Auth & Vault State
+    let currentUserEmail = null;
+    let currentDocumentHTML = "";
+    let currentDocumentTitle = "";
 
-    // --- Core Formatting Logic ---
-    function updateCharCount() { const text = legalInput.value; simplifyBtn.disabled = text.trim().length === 0; charCount.textContent = `${text.length} characters`; }
-    legalInput.addEventListener('input', updateCharCount);
-    clearBtn.addEventListener('click', () => { legalInput.value = ''; updateCharCount(); legalInput.focus(); });
+    legalInput.addEventListener('input', () => { simplifyBtn.disabled = legalInput.value.trim().length === 0; });
+    clearBtn.addEventListener('click', () => { legalInput.value = ''; simplifyBtn.disabled = true; });
     
     function showState(state) { 
-      emptyState.classList.toggle('hidden', state !== 'empty'); 
-      loadingState.classList.toggle('hidden', state !== 'loading'); 
-      summaryText.classList.toggle('hidden', state !== 'result'); 
-      copyBtn.classList.toggle('hidden', state !== 'result'); 
-      copyBtn.classList.toggle('flex', state === 'result'); 
-      signupBanner.classList.toggle('hidden', state !== 'result'); 
+      emptyState.classList.toggle('hidden', state !== 'empty'); loadingState.classList.toggle('hidden', state !== 'loading'); summaryText.classList.toggle('hidden', state !== 'result'); accountBanner.classList.toggle('hidden', state !== 'result'); 
     }
     
-    function fireStamp(animate) { stampBadge.classList.remove('hidden', 'stamp-in'); if (animate) { void stampBadge.offsetWidth; stampBadge.classList.add('stamp-in'); } }
-    function escapeHTML(str) { const div = document.createElement("div"); div.textContent = str; return div.innerHTML; }
-    
     function processMarkdown(text) {
+        const escapeHTML = str => { const div = document.createElement("div"); div.textContent = str; return div.innerHTML; };
         return escapeHTML(text).replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-ink-900">$1</strong>');
     }
 
     function formatMarkdownToHTML(markdownText) {
-      const lines = markdownText.split("\n").map(l => l.trim()).filter(Boolean);
-      let html = "", inList = false;
-      for (const line of lines) {
-        if (/^[\*\-]\s+/.test(line)) { 
-          if (!inList) { html += '<ul class="list-disc list-inside space-y-2 mb-4">'; inList = true; } 
-          html += `<li class="text-ink-900">${processMarkdown(line.replace(/^[\*\-]\s+/, ""))}</li>`; 
-        }
-        else { 
-          if (inList) { html += "</ul>"; inList = false; } 
-          html += `<p class="font-mono text-[11px] uppercase tracking-widest text-seal mb-1 mt-4">${processMarkdown(line)}</p>`; 
-        }
-      }
+      const lines = markdownText.split("\n").map(l => l.trim()).filter(Boolean); let html = "", inList = false;
+      for (const line of lines) { if (/^[\*\-]\s+/.test(line)) { if (!inList) { html += '<ul class="list-disc list-inside space-y-2 mb-4">'; inList = true; } html += `<li class="text-ink-900">${processMarkdown(line.replace(/^[\*\-]\s+/, ""))}</li>`; } else { if (inList) { html += "</ul>"; inList = false; } html += `<p class="font-mono text-[11px] uppercase tracking-widest text-seal mb-1 mt-4">${processMarkdown(line)}</p>`; } }
       if (inList) html += "</ul>"; return html;
     }
 
-    // --- API Call for Summarization ---
     simplifyBtn.addEventListener('click', async () => {
-      const text = legalInput.value.trim();
-      if (!text) return;
-      simplifyBtn.disabled = true; btnLabel.textContent = 'Reading fine print…'; btnIcon.classList.add('animate-spin'); showState('loading');
+      const text = legalInput.value.trim(); if (!text) return;
+      simplifyBtn.disabled = true; btnLabel.textContent = 'Reading...'; btnIcon.classList.add('animate-spin'); showState('loading');
       try {
         const response = await fetch('/api/simplify', { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text }) });
         const data = await response.json();
         if (!response.ok) throw new Error(data.error);
-        summaryText.innerHTML = formatMarkdownToHTML(data.summary);
-        showState('result'); fireStamp(true);
-        addToRecent(text, { title: text.slice(0, 20) + '...', html: formatMarkdownToHTML(data.summary) });
-      } catch (err) { alert("Error: " + err.message); showState('empty'); } finally { btnLabel.textContent = 'Simplify Document'; btnIcon.classList.remove('animate-spin'); simplifyBtn.disabled = false; }
+        
+        currentDocumentHTML = formatMarkdownToHTML(data.summary);
+        currentDocumentTitle = text.substring(0, 30) + "...";
+        summaryText.innerHTML = currentDocumentHTML;
+        
+        showState('result');
+        stampBadge.classList.remove('hidden');
+      } catch (err) { alert("Error: " + err.message); showState('empty'); } finally { btnLabel.textContent = 'Simplify'; btnIcon.classList.remove('animate-spin'); simplifyBtn.disabled = false; }
     });
 
-    copyBtn.addEventListener('click', async () => { try { await navigator.clipboard.writeText(summaryText.innerText); copyLabel.textContent = 'Copied!'; setTimeout(() => copyLabel.textContent = 'Copy', 1500); } catch (err) {} });
-
-    function addToRecent(original, summaryObj) {
-      recentSummaries.unshift({ title: summaryObj.title, timestamp: new Date(), original, html: summaryObj.html });
-      recentEmpty.classList.add('hidden');
-      const row = document.createElement('button');
-      row.className = 'w-full flex items-center gap-4 px-5 py-4 text-left hover:bg-paper/60 transition-colors';
-      row.innerHTML = `<span class="w-2 h-2 rounded-full bg-seal shrink-0"></span><span class="flex-1 font-sans text-sm text-ink-900 truncate">${summaryObj.title}</span>`;
-      row.addEventListener('click', () => { legalInput.value = original; summaryText.innerHTML = summaryObj.html; showState('result'); });
-      recentList.prepend(row);
-    }
-
-    // --- Secure Auth Logic directly contacting /api/auth ---
-    const btnLogin = document.getElementById('btnLogin');
-    const btnSignup = document.getElementById('btnSignup');
-    const authEmail = document.getElementById('authEmail');
-    const authPassword = document.getElementById('authPassword');
-    const authMessage = document.getElementById('authMessage');
-    const authControls = document.getElementById('authControls');
-
-    // NEW: Email validation Regex Pattern added here!
+    // Vault Logic
+    const authSection = document.getElementById('authSection'), vaultSection = document.getElementById('vaultSection'), authTitle = document.getElementById('authTitle'), authEmail = document.getElementById('authEmail'), authPassword = document.getElementById('authPassword'), authActionBtn = document.getElementById('authActionBtn'), authToggleBtn = document.getElementById('authToggleBtn'), authMessage = document.getElementById('authMessage'), fetchDocsBtn = document.getElementById('fetchDocsBtn'), vaultList = document.getElementById('vaultList'), logoutBtn = document.getElementById('logoutBtn');
+    let isLoginMode = false;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    async function handleAuth(action) {
-      const email = authEmail.value.trim();
-      const password = authPassword.value;
-      
-      // 1. Basic empty check
-      if (!email || !password) {
-        showMessage("Please enter email and password.", "text-seal");
-        return;
-      }
+    authToggleBtn.addEventListener('click', () => {
+      isLoginMode = !isLoginMode;
+      authTitle.textContent = isLoginMode ? "Log in to your account" : "Create an account";
+      authActionBtn.textContent = isLoginMode ? "Log in" : "Sign up";
+      authToggleBtn.textContent = isLoginMode ? "Don't have an account? Sign up" : "Already have an account? Log in";
+      authMessage.classList.add('hidden');
+    });
 
-      // 2. NEW: Verify Valid Email Format
-      if (!emailRegex.test(email)) {
-        showMessage("Please enter a valid email address.", "text-seal");
-        return;
-      }
+    function showMessage(msg, colorClass) { authMessage.textContent = msg; authMessage.className = `text-sm font-semibold mt-2 md:mt-0 ${colorClass}`; authMessage.classList.remove('hidden'); }
 
-      // 3. NEW: Verify Password Length (Supabase needs min 6 chars)
-      if (password.length < 6) {
-        showMessage("Password must be at least 6 characters.", "text-seal");
-        return;
-      }
-      
-      authControls.style.opacity = '0.5';
+    authActionBtn.addEventListener('click', async () => {
+      const email = authEmail.value.trim(); const password = authPassword.value;
+      if (!email || !password || !emailRegex.test(email) || password.length < 6) { showMessage("Enter valid email & 6+ char password.", "text-seal"); return; }
+      authActionBtn.style.opacity = '0.5';
+      const action = isLoginMode ? 'login' : 'signup';
       
       try {
-        const response = await fetch('/api/auth', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action, email, password })
-        });
-        
+        // Authenticate User
+        const response = await fetch('/api/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action, email, password }) });
         const data = await response.json();
+        if (!response.ok) throw new Error(data.error);
         
-        if (!response.ok) throw new Error(data.error || 'Authentication failed');
-        
-        authControls.classList.add('hidden');
-        showMessage(data.message, "text-green-600");
-      } catch (error) {
-        showMessage(error.message, "text-seal");
-      } finally {
-        authControls.style.opacity = '1';
-      }
-    }
+        currentUserEmail = email;
 
-    function showMessage(msg, colorClass) {
-      authMessage.textContent = msg;
-      authMessage.className = `text-sm font-semibold mt-2 md:mt-0 ${colorClass}`;
-      authMessage.classList.remove('hidden');
-    }
+        // Auto-Save current document to DB
+        if (currentDocumentHTML && currentDocumentTitle) {
+           await fetch('/api/vault', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'save', email: currentUserEmail, title: currentDocumentTitle, content_html: currentDocumentHTML }) });
+        }
 
-    // Event listeners
-    if (btnLogin) btnLogin.addEventListener('click', () => handleAuth('login'));
-    if (btnSignup) btnSignup.addEventListener('click', () => handleAuth('signup'));
+        authSection.classList.add('hidden'); vaultSection.classList.remove('hidden'); vaultSection.classList.add('flex');
+      } catch (error) { showMessage(error.message, "text-seal"); } finally { authActionBtn.style.opacity = '1'; }
+    });
 
+    fetchDocsBtn.addEventListener('click', async () => {
+      vaultList.innerHTML = `<div class="animate-pulse space-y-2 w-full"><div class="h-4 bg-rule/60 rounded w-1/3"></div><div class="h-4 bg-rule/60 rounded w-2/3"></div></div>`;
+      try {
+        const response = await fetch('/api/vault', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'fetch', email: currentUserEmail }) });
+        const data = await response.json();
+        if(data && data.length > 0) {
+          vaultList.innerHTML = `<div class="w-full text-left space-y-4">` + data.map(doc => `
+            <div class="p-4 border border-rule rounded bg-surface">
+              <p class="font-semibold text-sm text-ink-900">${doc.title}</p>
+              <div class="text-xs text-ink-600 mt-2 p-2 bg-paper rounded border border-rule/50 max-h-32 overflow-y-auto">${doc.content_html}</div>
+              <p class="text-[10px] text-ink-600 mt-2 uppercase">Saved: ${new Date(doc.created_at).toLocaleString()}</p>
+            </div>`).join('') + `</div>`;
+        } else {
+          vaultList.innerHTML = `<p class="text-sm text-ink-600">No documents saved yet.</p>`;
+        }
+      } catch (err) { vaultList.innerHTML = `<p class="text-sm text-seal">Failed to load cloud docs.</p>`; }
+    });
+
+    logoutBtn.addEventListener('click', () => {
+      vaultSection.classList.add('hidden'); vaultSection.classList.remove('flex'); authSection.classList.remove('hidden');
+      authEmail.value = ''; authPassword.value = ''; currentUserEmail = null;
+      vaultList.innerHTML = `<p class="text-sm text-ink-600 italic">Click fetch to retrieve your documents securely from the database.</p>`;
+    });
   })();
   </script>
 </body>
-  </html>
-  
+</html>
