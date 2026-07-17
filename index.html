@@ -236,12 +236,28 @@
     const authMessage = document.getElementById('authMessage');
     const authControls = document.getElementById('authControls');
 
+    // NEW: Email validation Regex Pattern added here!
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     async function handleAuth(action) {
       const email = authEmail.value.trim();
       const password = authPassword.value;
       
+      // 1. Basic empty check
       if (!email || !password) {
         showMessage("Please enter email and password.", "text-seal");
+        return;
+      }
+
+      // 2. NEW: Verify Valid Email Format
+      if (!emailRegex.test(email)) {
+        showMessage("Please enter a valid email address.", "text-seal");
+        return;
+      }
+
+      // 3. NEW: Verify Password Length (Supabase needs min 6 chars)
+      if (password.length < 6) {
+        showMessage("Password must be at least 6 characters.", "text-seal");
         return;
       }
       
