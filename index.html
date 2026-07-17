@@ -18,7 +18,21 @@
 <body class="bg-paper text-ink-900 font-sans antialiased min-h-screen flex flex-col">
   <header class="reveal reveal-1 sticky top-0 z-30 bg-paper/90 backdrop-blur border-b border-rule">
     <div class="max-w-6xl mx-auto px-5 sm:px-6 py-4 flex items-center justify-between gap-4">
-      <div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full border-2 border-seal flex items-center justify-center shrink-0"><span class="font-display font-bold text-seal text-sm">C</span></div><div><div class="flex items-center gap-2"><h1 class="font-display font-semibold text-xl tracking-tight">Clarum</h1><span class="hidden sm:inline-block font-mono text-[10px] uppercase tracking-widest text-ink-600 border border-rule rounded-full px-2 py-0.5">Beta</span></div></div></div>
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-full border-2 border-seal flex items-center justify-center shrink-0">
+          <span class="font-display font-bold text-seal text-sm">C</span>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-display font-semibold text-xl tracking-tight">Clarum</h1>
+            <span class="hidden sm:inline-block font-mono text-[10px] uppercase tracking-widest text-ink-600 border border-rule rounded-full px-2 py-0.5">Beta</span>
+          </div>
+        </div>
+      </div>
+      <!-- NEW: Login / Sign up Button added here -->
+      <button id="headerAuthBtn" class="border border-ink-900 text-ink-900 px-4 py-1.5 rounded-full text-sm font-semibold hover:bg-ink-900 hover:text-surface transition-colors">
+        Login / Sign up
+      </button>
     </div>
   </header>
 
@@ -129,6 +143,12 @@
         
         showState('result');
         stampBadge.classList.remove('hidden');
+
+        // NEW LOGIC: If user is already logged in, save to database immediately!
+        if (currentUserEmail) {
+           fetch('/api/vault', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'save', email: currentUserEmail, title: currentDocumentTitle, content_html: currentDocumentHTML }) }).catch(console.error);
+        }
+
       } catch (err) { alert("Error: " + err.message); showState('empty'); } finally { btnLabel.textContent = 'Simplify'; btnIcon.classList.remove('animate-spin'); simplifyBtn.disabled = false; }
     });
 
@@ -160,8 +180,9 @@
         if (!response.ok) throw new Error(data.error);
         
         currentUserEmail = email;
+        document.getElementById('headerAuthBtn').textContent = 'My Vault'; // Update Header Button text
 
-        // Auto-Save current document to DB
+        // Auto-Save current document to DB if generated before logging in
         if (currentDocumentHTML && currentDocumentTitle) {
            await fetch('/api/vault', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'save', email: currentUserEmail, title: currentDocumentTitle, content_html: currentDocumentHTML }) });
         }
@@ -191,8 +212,17 @@
     logoutBtn.addEventListener('click', () => {
       vaultSection.classList.add('hidden'); vaultSection.classList.remove('flex'); authSection.classList.remove('hidden');
       authEmail.value = ''; authPassword.value = ''; currentUserEmail = null;
+      document.getElementById('headerAuthBtn').textContent = 'Login / Sign up'; // Reset Header Button
       vaultList.innerHTML = `<p class="text-sm text-ink-600 italic">Click fetch to retrieve your documents securely from the database.</p>`;
     });
+
+    // NEW: Header Button Logic
+    const headerAuthBtn = document.getElementById('headerAuthBtn');
+    headerAuthBtn.addEventListener('click', () => {
+      accountBanner.classList.remove('hidden'); // Ensure banner is visible
+      accountBanner.scrollIntoView({ behavior: 'smooth' }); // Smooth scroll to vault/login area
+    });
+
   })();
   </script>
 </body>
