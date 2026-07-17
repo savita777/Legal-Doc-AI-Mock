@@ -9,6 +9,9 @@
 <!-- Tailwind (CDN) -->
 <script src="https://cdn.tailwindcss.com"></script>
 
+<!-- 🚨 ADDED: Supabase CDN for Database -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <!-- Fonts: Fraunces (display/document serif), Public Sans (UI sans), IBM Plex Mono (utility/meta) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -79,6 +82,10 @@
   .doc-scroll::-webkit-scrollbar { width: 8px; }
   .doc-scroll::-webkit-scrollbar-thumb { background: #D8CFB2; border-radius: 999px; }
   .doc-scroll::-webkit-scrollbar-track { background: transparent; }
+  
+  /* Markdown List Styling */
+  .prose-lists ul { list-style-type: disc; margin-left: 1.25rem; margin-top: 0.5rem; margin-bottom: 0.5rem; }
+  .prose-lists li { margin-bottom: 0.25rem; }
 </style>
 </head>
 
@@ -88,7 +95,6 @@
   <header class="reveal reveal-1 sticky top-0 z-30 bg-paper/90 backdrop-blur border-b border-rule">
     <div class="max-w-6xl mx-auto px-5 sm:px-6 py-4 flex items-center justify-between gap-4">
       <div class="flex items-center gap-3">
-        <!-- Logo mark: a small stamp/seal, echoing the "SIMPLIFIED" stamp used later -->
         <div class="w-9 h-9 rounded-full border-2 border-seal flex items-center justify-center shrink-0" aria-hidden="true">
           <span class="font-display font-bold text-seal text-sm">C</span>
         </div>
@@ -109,7 +115,7 @@
   <!-- ============ MAIN ============ -->
   <main class="flex-1 w-full max-w-6xl mx-auto px-5 sm:px-6 py-10 md:py-14">
 
-    <!-- Hero line: concrete, not generic -->
+    <!-- Hero line -->
     <div class="reveal reveal-2 max-w-2xl mb-10">
       <h2 class="font-display text-2xl sm:text-3xl font-medium leading-snug">
         Paste any contract, lease, or terms of service.
@@ -137,13 +143,9 @@
           class="doc-scroll flex-1 min-h-[320px] bg-transparent outline-none resize-none font-serif text-[15px] leading-relaxed placeholder:text-ink-600/50 focus-visible:ring-2 focus-visible:ring-seal/40 rounded-md"
           placeholder="Paste your lease, NDA, terms of service, or any contract here…"
         ></textarea>
-
-        <p class="font-sans text-xs text-ink-600 mt-3 pt-3 border-t border-rule">
-          Tip: works well with leases, NDAs, terms of service, and offer letters.
-        </p>
       </div>
 
-      <!-- SIMPLIFY BUTTON (seam between the two panes) -->
+      <!-- SIMPLIFY BUTTON -->
       <div class="relative flex items-center justify-center py-5 lg:py-0 lg:px-6">
         <div class="hidden lg:block absolute inset-y-6 left-1/2 w-px bg-rule -translate-x-1/2" aria-hidden="true"></div>
         <button
@@ -163,7 +165,6 @@
       <!-- PLAIN ENGLISH RESULT -->
       <div class="flex-1 bg-surface border border-rule rounded-xl p-5 md:p-6 flex flex-col min-w-0 relative">
 
-        <!-- Stamp badge, appears after generation -->
         <div id="stampBadge" class="hidden absolute top-4 right-4 sm:right-5 z-20 border-2 border-seal text-seal font-mono font-bold text-[10px] tracking-widest px-2.5 py-1 rounded-md bg-surface/90 select-none" aria-hidden="true">
           SIMPLIFIED
         </div>
@@ -180,7 +181,6 @@
         </div>
 
         <div class="doc-scroll flex-1 min-h-[320px] overflow-y-auto">
-
           <!-- Empty state -->
           <div id="emptyState" class="h-full min-h-[320px] flex flex-col items-center justify-center text-center gap-2 px-4">
             <svg class="w-8 h-8 text-ink-600/50 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -189,7 +189,6 @@
               <path d="M8 13h8M8 17h5" />
             </svg>
             <p class="font-sans text-sm text-ink-600">Your plain-English translation will appear here.</p>
-            <p class="font-sans text-xs text-ink-600/70">Paste a document on the left and hit Simplify.</p>
           </div>
 
           <!-- Loading skeleton -->
@@ -199,12 +198,10 @@
             <div class="h-3 bg-rule/60 rounded w-5/6"></div>
             <div class="h-3 bg-rule/60 rounded w-2/3 mb-2"></div>
             <div class="h-3 bg-rule/60 rounded w-full"></div>
-            <div class="h-3 bg-rule/60 rounded w-4/6"></div>
           </div>
 
           <!-- Summary output -->
-          <div id="summaryText" class="hidden font-sans text-[15px] leading-relaxed space-y-4"></div>
-
+          <div id="summaryText" class="hidden font-sans text-[15px] leading-relaxed space-y-4 prose-lists"></div>
         </div>
       </div>
 
@@ -223,18 +220,15 @@
         <div id="recentEmpty" class="px-6 py-8 text-center">
           <p class="font-sans text-sm text-ink-600">Nothing here yet — simplify a document above and it'll show up here.</p>
         </div>
-        <!-- Rows injected by JS -->
       </div>
     </section>
 
   </main>
 
-  <!-- ============ FOOTER ============ -->
   <footer class="border-t border-rule mt-8">
     <div class="max-w-6xl mx-auto px-5 sm:px-6 py-6 text-center">
       <p class="font-mono text-[11px] text-ink-600 leading-relaxed">
-        Clarum explains documents in plain language. It does not provide legal advice —
-        for binding decisions, consult a licensed attorney.
+        Clarum explains documents in plain language. It does not provide legal advice.
       </p>
     </div>
   </footer>
@@ -243,27 +237,37 @@
   (function () {
     'use strict';
 
+    // 🚨 ==========================================
+    // PUT YOUR KEYS HERE BEFORE DEPLOYING
+    // ==========================================
+    const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
+    const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
+    const GEMINI_API_KEY = "YOUR_GEMINI_API_KEY";
+    
+    const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    
+    // Initialize Supabase
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
     // ---------- Element refs ----------
     const legalInput   = document.getElementById('legalInput');
-    const charCount     = document.getElementById('charCount');
-    const clearBtn       = document.getElementById('clearBtn');
-    const simplifyBtn   = document.getElementById('simplifyBtn');
-    const btnLabel       = document.getElementById('btnLabel');
-    const btnIcon         = document.getElementById('btnIcon');
-    const emptyState     = document.getElementById('emptyState');
-    const loadingState  = document.getElementById('loadingState');
-    const summaryText   = document.getElementById('summaryText');
-    const stampBadge    = document.getElementById('stampBadge');
-    const copyBtn         = document.getElementById('copyBtn');
-    const copyLabel      = document.getElementById('copyLabel');
-    const recentList     = document.getElementById('recentList');
-    const recentEmpty   = document.getElementById('recentEmpty');
+    const charCount    = document.getElementById('charCount');
+    const clearBtn     = document.getElementById('clearBtn');
+    const simplifyBtn  = document.getElementById('simplifyBtn');
+    const btnLabel     = document.getElementById('btnLabel');
+    const btnIcon      = document.getElementById('btnIcon');
+    const emptyState   = document.getElementById('emptyState');
+    const loadingState = document.getElementById('loadingState');
+    const summaryText  = document.getElementById('summaryText');
+    const stampBadge   = document.getElementById('stampBadge');
+    const copyBtn      = document.getElementById('copyBtn');
+    const copyLabel    = document.getElementById('copyLabel');
+    const recentList   = document.getElementById('recentList');
+    const recentEmpty  = document.getElementById('recentEmpty');
 
-    // In-memory only — no localStorage (this file may run inside a sandboxed
-    // preview). Swap for a real persistence layer alongside your backend.
     const recentSummaries = [];
 
-    // ---------- Character count + button enable/disable ----------
+    // ---------- UI State Managers ----------
     function updateCharCount() {
       const text = legalInput.value;
       const words = text.trim() ? text.trim().split(/\s+/).length : 0;
@@ -279,49 +283,6 @@
       legalInput.focus();
     });
 
-    // ---------- Mock "AI" summary ----------
-    // TODO(backend): replace generateMockSummary() + the setTimeout below with
-    // a real fetch() call to your /api/simplify endpoint. Keep the same
-    // { title, bullets: [{label, html}] } shape (or adapt render() to match
-    // whatever your API returns).
-    function deriveTitle(text) {
-      const words = text.trim().split(/\s+/).slice(0, 6).join(' ');
-      return words.length ? (text.trim().split(/\s+/).length > 6 ? words + '…' : words) : 'Untitled document';
-    }
-
-    function generateMockSummary(text) {
-      return {
-        title: deriveTitle(text),
-        bullets: [
-          {
-            label: 'What this is',
-            html: 'A standard agreement between you and the other party, covering how the arrangement works and what happens if either side wants to end it early.'
-          },
-          {
-            label: 'Your obligations',
-            html: 'You\'re expected to fulfill specific duties on time — the document lists concrete deadlines and responsibilities you\'d be agreeing to.'
-          },
-          {
-            label: 'Money & dates',
-            html: 'Check the payment terms and any renewal window closely — missing one can trigger fees or an <mark class="bg-highlight/40 rounded-sm px-0.5">automatic renewal</mark> you didn\'t intend.'
-          },
-          {
-            label: 'Worth a second look',
-            html: 'One or two clauses limit how you can dispute issues later. Consider having a <mark class="bg-highlight/40 rounded-sm px-0.5">licensed attorney</mark> review before you sign.'
-          }
-        ]
-      };
-    }
-
-    function renderSummary(summary) {
-      summaryText.innerHTML = summary.bullets.map(b => `
-        <div>
-          <p class="font-mono text-[11px] uppercase tracking-widest text-seal mb-1">${b.label}</p>
-          <p class="text-ink-900">${b.html}</p>
-        </div>
-      `).join('');
-    }
-
     function showState(state) {
       emptyState.classList.toggle('hidden', state !== 'empty');
       loadingState.classList.toggle('hidden', state !== 'loading');
@@ -333,13 +294,50 @@
     function fireStamp(animate) {
       stampBadge.classList.remove('hidden', 'stamp-in');
       if (animate) {
-        void stampBadge.offsetWidth; // restart animation
+        void stampBadge.offsetWidth;
         stampBadge.classList.add('stamp-in');
       }
     }
 
-    // ---------- Simplify click ----------
-    simplifyBtn.addEventListener('click', () => {
+    // ---------- AI logic & Formatters ----------
+    function deriveTitle(text) {
+      const words = text.trim().split(/\s+/).slice(0, 5).join(' ');
+      return words.length ? (text.trim().split(/\s+/).length > 5 ? words + '…' : words) : 'Untitled document';
+    }
+
+    function escapeHTML(str) {
+      const div = document.createElement("div");
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function formatMarkdownToHTML(markdownText) {
+      const lines = markdownText.split("\n").map(l => l.trim()).filter(Boolean);
+      let html = "";
+      let inList = false;
+
+      for (const line of lines) {
+        const isBullet = /^[\*\-]\s+/.test(line);
+        if (isBullet) {
+          if (!inList) {
+            html += '<ul class="list-disc list-inside space-y-2 mb-4">';
+            inList = true;
+          }
+          html += `<li class="text-ink-900">${escapeHTML(line.replace(/^[\*\-]\s+/, ""))}</li>`;
+        } else {
+          if (inList) {
+            html += "</ul>";
+            inList = false;
+          }
+          html += `<p class="font-mono text-[11px] uppercase tracking-widest text-seal mb-1 mt-4">${escapeHTML(line)}</p>`;
+        }
+      }
+      if (inList) html += "</ul>";
+      return html;
+    }
+
+    // ---------- The Real API Call ----------
+    simplifyBtn.addEventListener('click', async () => {
       const text = legalInput.value.trim();
       if (!text) {
         legalInput.classList.add('shake');
@@ -348,30 +346,59 @@
         return;
       }
 
-      // Loading state
+      // UI update for loading
       simplifyBtn.disabled = true;
-      btnLabel.textContent = 'Reading the fine print…';
+      btnLabel.textContent = 'Reading fine print…';
       btnIcon.classList.add('animate-spin');
       stampBadge.classList.add('hidden');
       showState('loading');
 
-      // --- MOCK LOGIC: replace with a real API call ---
-      setTimeout(() => {
-        const summary = generateMockSummary(text);
-        renderSummary(summary);
+      try {
+        // 1. Call Gemini 3.5 Flash API
+        const prompt = `Act as an expert lawyer. Summarize the following complex legal document into 3-4 very simple, easy-to-understand bullet points for a layman. Avoid heavy jargon. Document: ${text}`;
+        
+        const response = await fetch(GEMINI_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        });
+
+        if (!response.ok) throw new Error("API Network error");
+        
+        const data = await response.json();
+        const aiSummary = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        
+        if (!aiSummary) throw new Error("AI returned empty data");
+
+        const formattedHtml = formatMarkdownToHTML(aiSummary);
+
+        // 2. Save to Supabase
+        const { error: dbError } = await supabaseClient
+          .from("documents")
+          .insert([{ original_text: text, summary: aiSummary }]);
+
+        if (dbError) console.error("Database save failed:", dbError);
+
+        // 3. Update UI with result
+        summaryText.innerHTML = formattedHtml;
         showState('result');
         fireStamp(true);
 
-        addToRecent(text, summary);
+        // Add to history
+        addToRecent(text, { title: deriveTitle(text), html: formattedHtml });
 
+      } catch (error) {
+        console.error("Error:", error);
+        summaryText.innerHTML = `<p class="text-red-600 font-bold">Failed to simplify document. Please check your API keys or connection.</p>`;
+        showState('result');
+      } finally {
         btnLabel.textContent = 'Simplify Document';
         btnIcon.classList.remove('animate-spin');
         simplifyBtn.disabled = false;
-      }, 1100);
-      // --- end mock logic ---
+      }
     });
 
-    // ---------- Copy ----------
+    // ---------- Copy Functionality ----------
     copyBtn.addEventListener('click', async () => {
       const plain = summaryText.innerText;
       try {
@@ -380,12 +407,10 @@
           copyLabel.textContent = 'Copied!';
           setTimeout(() => (copyLabel.textContent = 'Copy'), 1500);
         }
-      } catch (err) {
-        // Clipboard may be blocked in a sandboxed preview — fail quietly.
-      }
+      } catch (err) {}
     });
 
-    // ---------- Recent Summaries ----------
+    // ---------- Recent Summaries History ----------
     function formatRelativeTime(date) {
       const diffMs = Date.now() - date.getTime();
       const min = Math.floor(diffMs / 60000);
@@ -393,18 +418,16 @@
       if (min < 60) return `${min}m ago`;
       const hr = Math.floor(min / 60);
       if (hr < 24) return `${hr}h ago`;
-      const day = Math.floor(hr / 24);
-      if (day === 1) return 'yesterday';
-      return `${day}d ago`;
+      return 'earlier';
     }
 
-    function addToRecent(originalText, summary) {
+    function addToRecent(originalText, summaryObj) {
       recentSummaries.unshift({
         id: Date.now(),
-        title: summary.title,
+        title: summaryObj.title,
         timestamp: new Date(),
         original: originalText,
-        summary: summary
+        html: summaryObj.html
       });
       if (recentSummaries.length > 8) recentSummaries.pop();
       renderRecentList();
@@ -426,23 +449,20 @@
           <span class="font-mono text-xs text-ink-600 shrink-0">${formatRelativeTime(entry.timestamp)}</span>
           <span class="text-ink-600/60 shrink-0" aria-hidden="true">›</span>
         `;
-        row.addEventListener('click', () => loadRecent(entry));
+        row.addEventListener('click', () => {
+          legalInput.value = entry.original;
+          updateCharCount();
+          summaryText.innerHTML = entry.html;
+          showState('result');
+          fireStamp(false);
+          document.getElementById('workspace').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
         recentList.appendChild(row);
       });
     }
 
-    function loadRecent(entry) {
-      legalInput.value = entry.original;
-      updateCharCount();
-      renderSummary(entry.summary);
-      showState('result');
-      fireStamp(false);
-      document.getElementById('workspace').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
   })();
   </script>
-
 </body>
-            </html>
+  </html>
   
