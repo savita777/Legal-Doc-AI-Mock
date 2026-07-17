@@ -148,12 +148,25 @@
     function showState(state) { emptyState.classList.toggle('hidden', state !== 'empty'); loadingState.classList.toggle('hidden', state !== 'loading'); summaryText.classList.toggle('hidden', state !== 'result'); copyBtn.classList.toggle('hidden', state !== 'result'); copyBtn.classList.toggle('flex', state === 'result'); }
     function fireStamp(animate) { stampBadge.classList.remove('hidden', 'stamp-in'); if (animate) { void stampBadge.offsetWidth; stampBadge.classList.add('stamp-in'); } }
     function escapeHTML(str) { const div = document.createElement("div"); div.textContent = str; return div.innerHTML; }
+    
+    // NEW: Function to remove stars ** and convert them to clean bold text
+    function processMarkdown(text) {
+        return escapeHTML(text).replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-ink-900">$1</strong>');
+    }
+
     function formatMarkdownToHTML(markdownText) {
       const lines = markdownText.split("\n").map(l => l.trim()).filter(Boolean);
       let html = "", inList = false;
       for (const line of lines) {
-        if (/^[\*\-]\s+/.test(line)) { if (!inList) { html += '<ul class="list-disc list-inside space-y-2 mb-4">'; inList = true; } html += `<li class="text-ink-900">${escapeHTML(line.replace(/^[\*\-]\s+/, ""))}</li>`; }
-        else { if (inList) { html += "</ul>"; inList = false; } html += `<p class="font-mono text-[11px] uppercase tracking-widest text-seal mb-1 mt-4">${escapeHTML(line)}</p>`; }
+        if (/^[\*\-]\s+/.test(line)) { 
+          if (!inList) { html += '<ul class="list-disc list-inside space-y-2 mb-4">'; inList = true; } 
+          // Applies the new clean bold text filter here
+          html += `<li class="text-ink-900">${processMarkdown(line.replace(/^[\*\-]\s+/, ""))}</li>`; 
+        }
+        else { 
+          if (inList) { html += "</ul>"; inList = false; } 
+          html += `<p class="font-mono text-[11px] uppercase tracking-widest text-seal mb-1 mt-4">${processMarkdown(line)}</p>`; 
+        }
       }
       if (inList) html += "</ul>"; return html;
     }
@@ -187,3 +200,4 @@
   </script>
 </body>
 </html>
+
